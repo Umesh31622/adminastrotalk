@@ -201,7 +201,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://frontendastro-1.onrender.com"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   },
 });
@@ -209,7 +209,7 @@ const io = socketio(server, {
 // ================= CORS =================
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://frontendastro-1.onrender.com",
+  // "https://frontendastro-1.onrender.com",
 ];
 app.use(
   cors({
@@ -411,3 +411,4 @@ server.listen(PORT, () =>
     } mode`
   )
 );
+

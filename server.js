@@ -27,7 +27,7 @@
 // });
 
 // // ================= CORS =================
-// const allowedOrigins = ["https://frontendastro-1.onrender.com"];
+// const allowedOrigins = ["https://frontendastro-three.vercel.app/"];
 // app.use(
 //   cors({
 //     origin: (origin, callback) => {
@@ -249,7 +249,7 @@ const server = http.createServer(app);
 // ================= SOCKET.IO =================
 const io = socketio(server, {
   cors: {
-    origin: ["https://frontendastro-1.onrender.com", "http://localhost:3000"],
+    origin: ["https://frontendastro-three.vercel.app", "http://localhost:3000"],
     credentials: true,
   },
 });
@@ -462,3 +462,4 @@ server.listen(PORT, () =>
     } mode`
   )
 );
+

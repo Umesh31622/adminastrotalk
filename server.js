@@ -1,5 +1,6 @@
 
 
+
 // require("dotenv").config();
 // const express = require("express");
 // const mongoose = require("mongoose");
@@ -12,24 +13,21 @@
 // const compression = require("compression");
 // const schedule = require("node-schedule");
 // const Razorpay = require("razorpay");
-
-// // ✅ NEW
 // const { google } = require("googleapis");
 
 // const app = express();
 // const server = http.createServer(app);
+
+// // ================= SOCKET.IO =================
 // const io = socketio(server, {
 //   cors: {
-//     origin: ["http://localhost:3000", "https://frontendastro-1.onrender.com"],
+//     origin: ["https://frontendastro-1.onrender.com"],
 //     credentials: true,
 //   },
 // });
 
 // // ================= CORS =================
-// const allowedOrigins = [
-//   "http://localhost:3000",
-//   "https://frontendastro-1.onrender.com",
-// ];
+// const allowedOrigins = ["https://frontendastro-1.onrender.com"];
 // app.use(
 //   cors({
 //     origin: (origin, callback) => {
@@ -43,14 +41,14 @@
 // );
 // app.options("*", cors());
 
-// // ================= Middleware =================
+// // ================= MIDDLEWARE =================
 // app.use(helmet());
 // app.use(compression());
 // app.use(express.json({ limit: "10mb" }));
 // app.use(express.urlencoded({ extended: true }));
 // app.use(morgan("dev"));
 
-// // ================= MongoDB Connection =================
+// // ================= MONGODB CONNECTION =================
 // const PORT = process.env.PORT || 7000;
 // mongoose.set("strictQuery", false);
 // mongoose
@@ -61,7 +59,7 @@
 //   .then(() => console.log("✅ MongoDB connected"))
 //   .catch((err) => console.error("❌ MongoDB connection failed:", err.message));
 
-// // ================= Razorpay Config =================
+// // ================= RAZORPAY CONFIG =================
 // let razorpay;
 // try {
 //   razorpay = new Razorpay({
@@ -74,7 +72,7 @@
 //   console.error("❌ Razorpay initialization failed:", err.message);
 // }
 
-// // ================= Socket.IO =================
+// // ================= SOCKET.IO EVENTS =================
 // io.on("connection", (socket) => {
 //   console.log("⚡ User connected:", socket.id);
 
@@ -123,32 +121,32 @@
 // app.use("/api/payments", require("./routes/paymentRoutes"));
 // app.use("/api/discounts", require("./routes/discountRoutes"));
 
-// // ================= Content Vault =================
+// // ================= CONTENT VAULT =================
 // const { auth, admin } = require("./middleware/auth");
 // const upload = require("./middleware/upload");
 // const { createContent, getContent } = require("./controllers/contentController");
 // app.post("/api/vault", auth, admin, upload.single("file"), createContent);
 // app.get("/api/vault", auth, getContent);
 
-// // ================= Uploads =================
+// // ================= STATIC UPLOADS =================
 // app.use(
 //   "/uploads",
 //   express.static(path.resolve(process.env.UPLOAD_PATH || "./uploads"))
 // );
 
-// // ================= Health Check =================
+// // ================= HEALTH CHECK =================
 // app.get("/api/health", (req, res) =>
 //   res.json({ status: "✅ OK", time: new Date().toISOString() })
 // );
 
-// // ================= GOOGLE OAUTH SETUP =================
+// // ================= GOOGLE OAUTH =================
 // const oAuth2Client = new google.auth.OAuth2(
 //   process.env.CLIENT_ID,
 //   process.env.CLIENT_SECRET,
 //   process.env.REDIRECT_URI
 // );
 
-// // ✅ Step 1: Redirect user to Google consent screen
+// // Step 1: Redirect user to Google consent screen
 // app.get("/auth", (req, res) => {
 //   const scopes = [
 //     "https://www.googleapis.com/auth/calendar",
@@ -167,7 +165,7 @@
 //   res.redirect(url);
 // });
 
-// // ✅ Step 2: Handle OAuth2 callback
+// // Step 2: Handle OAuth2 callback
 // app.get("/oauth2callback", async (req, res) => {
 //   const code = req.query.code;
 //   if (!code) return res.status(400).send("No authorization code found");
@@ -189,15 +187,15 @@
 //   }
 // });
 
-// // ================= Root =================
+// // ================= ROOT ROUTE =================
 // app.get("/", (req, res) => res.send("🚀 MERN Astrology Backend Running"));
 
-// // ================= 404 Handler =================
+// // ================= 404 HANDLER =================
 // app.use("/api/*", (req, res) =>
 //   res.status(404).json({ success: false, error: "API route not found" })
 // );
 
-// // ================= Global Error =================
+// // ================= GLOBAL ERROR HANDLER =================
 // app.use((err, req, res, next) => {
 //   console.error("🔥 Global Error:", err.stack || err);
 //   res.status(err.status || 500).json({
@@ -206,14 +204,14 @@
 //   });
 // });
 
-// // ================= Cron =================
+// // ================= CRON JOB =================
 // schedule.scheduleJob("0 9 * * *", async () => {
 //   const { sendScheduledReminders } = require("./services/automationService");
 //   await sendScheduledReminders();
 //   console.log("📅 Automated reminders sent at 9 AM");
 // });
 
-// // ================= Serve Frontend in Production =================
+// // ================= SERVE FRONTEND IN PRODUCTION =================
 // if (process.env.NODE_ENV === "production") {
 //   const frontendPath = path.join(__dirname, "frontend", "build");
 //   app.use(express.static(frontendPath));
@@ -222,7 +220,7 @@
 //   );
 // }
 
-// // ================= Start Server =================
+// // ================= START SERVER =================
 // server.listen(PORT, () =>
 //   console.log(
 //     `🌐 Server running on port ${PORT} in ${
@@ -230,7 +228,6 @@
 //     } mode`
 //   )
 // );
-
 
 require("dotenv").config();
 const express = require("express");
@@ -252,17 +249,23 @@ const server = http.createServer(app);
 // ================= SOCKET.IO =================
 const io = socketio(server, {
   cors: {
-    origin: ["https://frontendastro-1.onrender.com"],
+    origin: ["https://frontendastro-1.onrender.com", "http://localhost:3000"],
     credentials: true,
   },
 });
 
 // ================= CORS =================
-const allowedOrigins = ["https://frontendastro-1.onrender.com"];
+const allowedOrigins = [
+  "https://frontendastro-1.onrender.com",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
       return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],

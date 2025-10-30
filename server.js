@@ -256,7 +256,7 @@ const io = socketio(server, {
 
 // ================= CORS =================
 const allowedOrigins = [
-  "https://frontendastro-1.onrender.com",
+  "https://frontendastro-three.vercel.app",
   "http://localhost:3000",
 ];
 
@@ -462,4 +462,5 @@ server.listen(PORT, () =>
     } mode`
   )
 );
+
 

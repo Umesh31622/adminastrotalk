@@ -23,23 +23,59 @@ const io = socketio(server, {
   },
 });
 
-// ================= CORS =================
+// // ================= CORS =================
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "https://frontendastro-1.onrender.com",
+// ];
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+//       return callback(new Error("Not allowed by CORS"));
+//     },
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//   })
+// );
+// app.options("*", cors());
+// ================= CORS CONFIGURATION =================
 const allowedOrigins = [
-  "http://localhost:3000",
-  "https://frontendastro-1.onrender.com",
+  "http://localhost:3000",                 // local frontend
+  "https://frontendastro-three.vercel.app" // live frontend (Vercel)
 ];
+
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    origin: function (origin, callback) {
+      // ✅ Allow requests with no origin (mobile apps, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // ✅ Allow if origin is in allowed list
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // ⚙️ In development, allow all origins (for testing)
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`⚠️ [DEV MODE] Allowing unlisted origin: ${origin}`);
+        return callback(null, true);
+      }
+
+      // 🚫 Otherwise block it
+      console.warn(`❌ [CORS BLOCKED] Origin not allowed: ${origin}`);
       return callback(new Error("Not allowed by CORS"));
     },
+    credentials: true, // ✅ Allows cookies & auth headers
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
   })
 );
+
+// ✅ Handle preflight requests
 app.options("*", cors());
+
 
 // ================= Middleware =================
 app.use(helmet());
@@ -259,3 +295,4 @@ server.listen(PORT, () =>
     } mode`
   )
 );
+

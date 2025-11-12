@@ -243,7 +243,7 @@ async function calculateNumerology({ name, date }) {
 }
 
 /* =======================================================
-   🪐 PLANET TRANSIT
+   🪐 FIXED — PLANET TRANSIT (Prokerala Compliant)
 ======================================================= */
 async function calculateTransit({ date, time, latitude, longitude }) {
   try {
@@ -251,58 +251,41 @@ async function calculateTransit({ date, time, latitude, longitude }) {
       throw new Error("Missing required parameters (date, time, latitude, longitude)");
     }
 
-    // 🧭 Prepare datetimes — Strict ISO format
+    // 🕒 Convert date + time → Proper ISO format (IST timezone)
     const d = new Date(date);
     const [hour, minute] = time.split(":").map(Number);
-
-    // Birth datetime
-    const birthDatetime = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    const datetime = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
       d.getDate()
     ).padStart(2, "0")}T${String(hour).padStart(2, "0")}:${String(minute).padStart(
       2,
       "0"
-    )}:00%2B05:30`; // Encode + → %2B
+    )}:00+05:30`;
 
-    // Transit datetime = current time (encoded)
-    const now = new Date();
-    const transitDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(
-      2,
-      "0"
-    )}:${String(now.getMinutes()).padStart(2, "0")}:00%2B05:30`;
-
-    // Coords
+    // 🌍 Coordinates (as string)
     const coordinates = `${Number(latitude).toFixed(2)},${Number(longitude).toFixed(2)}`;
-    const currentCoordinates = coordinates;
 
-    // ✅ Properly encoded query string
-    const query = `datetime=${birthDatetime}&transit_datetime=${transitDatetime}&coordinates=${encodeURIComponent(
-      coordinates
-    )}&current_coordinates=${encodeURIComponent(currentCoordinates)}&ayanamsa=1`;
-
-    const fullUrl = `${BASE_URL}/transit-chart?${query}`;
-    console.log("🪐 Fetching Vedic Transit Chart →", decodeURIComponent(fullUrl));
-
-    // 🔑 Get token + make raw GET request (disable axios transform)
+    // 🔑 Get access token
     const token = await getAccessToken();
-    const res = await axios.request({
-      url: fullUrl,
-      method: "GET",
+
+    // ✅ Call Prokerala Transit API
+    const response = await axios.get(`${BASE_URL}/transit`, {
       headers: { Authorization: `Bearer ${token}` },
-      transformRequest: [(data, headers) => data], // no encoding
+      params: {
+        datetime,      // must be ISO-8601 string
+        coordinates,   // must be "lat,long"
+        ayanamsa: 1,
+      },
     });
 
-    const data = res.data?.data || res.data;
-    const planets = data?.planet_positions || data?.planets || [];
+    const data = response.data?.data || response.data;
+    const planets = data?.planet_transit || data?.planet_positions || data?.planets || [];
 
-    console.log(`✅ ${planets.length} planets received from Prokerala.`);
+    console.log(`✅ ${planets.length} planets received from Prokerala for transit chart.`);
 
     return {
       success: true,
       data: {
-        description: "🪐 Vedic Transit Chart (North Indian System)",
+        description: "🪐 Vedic Transit Chart (Real-Time Prokerala Data)",
         ayanamsa: data?.ayanamsa?.name || "Lahiri",
         planets,
         raw: data,
@@ -313,6 +296,7 @@ async function calculateTransit({ date, time, latitude, longitude }) {
     return { success: false, error: err.response?.data || err.message };
   }
 }
+
 /* =======================================================
    🪔 DASHA
 ======================================================= */
@@ -716,3 +700,4 @@ module.exports = {
   getGemstoneRecommendation,
   getTransitRemedies,
 };
+

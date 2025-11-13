@@ -187,6 +187,8 @@ app.use("/api/prokerala", require("./routes/prokeralaRoutes"));
 app.use("/api/about", require("./routes/aboutRoutes"));
 app.use("/api/careers", require("./routes/careerRoutes"));
 app.use("/api/dashboard", require("./routes/dashboardStats"));
+app.use("/api/contact", require("./routes/contactRoutes"));
+app.use("/api/our-clients", require("./routes/ourClientsRoutes"));
 
 // ================= Content Vault =================
 const { auth, admin } = require("./middleware/auth");
@@ -295,4 +297,5 @@ server.listen(PORT, () =>
     } mode`
   )
 );
+
 

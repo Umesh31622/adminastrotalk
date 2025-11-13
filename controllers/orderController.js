@@ -1,28 +1,102 @@
 
 
+// const Order = require("../models/Order");
+
+// // Get all orders (with optional search)
+// exports.getOrders = async (req, res) => {
+//   try {
+//     const { search } = req.query;
+//     const query = search ? { customerName: { $regex: search, $options: "i" } } : {};
+//     const orders = await Order.find(query).sort({ createdAt: -1 });
+//     res.json(orders);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to fetch orders", error });
+//   }
+// };
+
+// // Create order
+// exports.createOrder = async (req, res) => {
+//   try {
+//     const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
+//     const order = new Order({ ...req.body, fileUrl });
+//     await order.save();
+//     res.status(201).json(order);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to create order", error });
+//   }
+// };
+
+// // Get order by ID
+// exports.getOrderById = async (req, res) => {
+//   try {
+//     const order = await Order.findById(req.params.id);
+//     if (!order) return res.status(404).json({ message: "Order not found" });
+//     res.json(order);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to fetch order", error });
+//   }
+// };
+
+// // Update order
+// exports.updateOrder = async (req, res) => {
+//   try {
+//     const fileUrl = req.file ? `/uploads/${req.file.filename}` : req.body.fileUrl;
+//     const updated = await Order.findByIdAndUpdate(
+//       req.params.id,
+//       { ...req.body, fileUrl },
+//       { new: true }
+//     );
+//     res.json(updated);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to update order", error });
+//   }
+// };
+
+// // Delete order
+// exports.deleteOrder = async (req, res) => {
+//   try {
+//     await Order.findByIdAndDelete(req.params.id);
+//     res.json({ message: "Order deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to delete order", error });
+//   }
+// };
+
+
 const Order = require("../models/Order");
 
-// Get all orders (with optional search)
+// Get all orders
 exports.getOrders = async (req, res) => {
   try {
     const { search } = req.query;
-    const query = search ? { customerName: { $regex: search, $options: "i" } } : {};
+
+    const query = search
+      ? { customerName: { $regex: search, $options: "i" } }
+      : {};
+
     const orders = await Order.find(query).sort({ createdAt: -1 });
-    res.json(orders);
+
+    res.json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch orders", error });
+    res.status(500).json({ success: false, message: "Failed to fetch orders", error });
   }
 };
 
-// Create order
+// Create Order
 exports.createOrder = async (req, res) => {
   try {
-    const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const order = new Order({ ...req.body, fileUrl });
+    const fileUrl = req.file ? req.file.path : null; // Cloudinary URL
+
+    const order = new Order({
+      ...req.body,
+      fileUrl,
+    });
+
     await order.save();
-    res.status(201).json(order);
+
+    res.status(201).json({ success: true, order });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create order", error });
+    res.status(500).json({ success: false, message: "Failed to create order", error });
   }
 };
 
@@ -30,34 +104,39 @@ exports.createOrder = async (req, res) => {
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
-    res.json(order);
+    if (!order)
+      return res.status(404).json({ success: false, message: "Order not found" });
+
+    res.json({ success: true, order });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch order", error });
+    res.status(500).json({ success: false, message: "Failed to fetch order", error });
   }
 };
 
-// Update order
+// Update Order
 exports.updateOrder = async (req, res) => {
   try {
-    const fileUrl = req.file ? `/uploads/${req.file.filename}` : req.body.fileUrl;
+    const fileUrl = req.file ? req.file.path : req.body.fileUrl;
+
     const updated = await Order.findByIdAndUpdate(
       req.params.id,
       { ...req.body, fileUrl },
       { new: true }
     );
-    res.json(updated);
+
+    res.json({ success: true, updated });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update order", error });
+    res.status(500).json({ success: false, message: "Failed to update order", error });
   }
 };
 
-// Delete order
+// Delete Order
 exports.deleteOrder = async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
-    res.json({ message: "Order deleted successfully" });
+    res.json({ success: true, message: "Order deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete order", error });
+    res.status(500).json({ success: false, message: "Failed to delete order", error });
   }
 };
+

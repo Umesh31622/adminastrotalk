@@ -1,18 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-const { getAbout, updateAbout } = require("../controllers/aboutController");
+const cloudUpload = require("../middleware/cloudUpload"); // ✅ Cloudinary storage
 
-// Multer Setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
-});
-const upload = multer({ storage });
+const upload = cloudUpload("about-us"); // folder name cloudinary me
 
-// Routes
+const { getAbout, updateAbout, deleteAbout } =
+  require("../controllers/aboutController");
+
 router.get("/", getAbout);
-router.post("/", upload.single("file"), updateAbout);
+router.post("/", upload.single("file"), updateAbout); // ⭐ CLOUD UPLOAD
+router.delete("/", deleteAbout);
 
 module.exports = router;

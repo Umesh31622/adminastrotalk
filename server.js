@@ -440,6 +440,7 @@ const io = socketio(server, {
       "http://localhost:3001",
       "http://localhost:3002",
       "https://frontendastro-1.onrender.com",
+      "https://frontendastro-three.vercel.app",
       "https://adminastrotalk-1.onrender.com"
     ],
     credentials: true,
@@ -470,6 +471,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3002",
   "https://frontendastro-1.onrender.com",
+  "https://frontendastro-three.vercel.app",
   "https://adminastrotalk-1.onrender.com"
 ];
 
@@ -627,3 +629,4 @@ app.get("/oauth2callback", async (req, res) => {
     <textarea style="width:100%;height:100px;">${code}</textarea>
   `);
 });
+

@@ -583,6 +583,7 @@ app.use("/api/careers", require("./routes/careerRoutes"));
 app.use("/api/dashboard", require("./routes/dashboardStats"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/our-clients", require("./routes/ourClientsRoutes"));
+app.use("/api/know-more", require("./routes/knowMoreRoutes"));
 
 // ================= STATUS =================
 app.get("/api/health", (req, res) =>
@@ -631,5 +632,6 @@ app.get("/oauth2callback", async (req, res) => {
     <textarea style="width:100%;height:100px;">${code}</textarea>
   `);
 });
+
 
 

@@ -257,3 +257,7 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a

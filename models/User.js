@@ -1,5 +1,6 @@
 
 
+<<<<<<< HEAD
 // const mongoose = require("mongoose");
 // const bcrypt = require("bcryptjs");
 
@@ -54,6 +55,20 @@ const userSchema = new mongoose.Schema(
 
 // Hash password before save
 userSchema.pre("save", async function (next) {
+=======
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ["admin","member"], default: "member" },
+});
+
+// Hash password before save
+userSchema.pre("save", async function(next) {
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();

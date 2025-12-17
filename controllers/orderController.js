@@ -139,6 +139,7 @@
 //   }
 // };
 
+<<<<<<< HEAD
 // const Order = require("../models/Order");
 // const cloudinary = require("../config/cloudinary");
 
@@ -269,6 +270,10 @@
 const Order = require("../models/Order");
 const cloudinary = require("../config/cloudinary");
 const { sendEmail } = require("../utils/sendEmail");
+=======
+const Order = require("../models/Order");
+const cloudinary = require("../config/cloudinary");
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 
 // ===============================
 // Get all orders
@@ -285,15 +290,22 @@ exports.getOrders = async (req, res) => {
 
     res.json({ success: true, orders });
   } catch (error) {
+<<<<<<< HEAD
     res.status(500).json({
       success: false,
       message: "Failed to fetch orders",
       error,
     });
+=======
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch orders", error });
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   }
 };
 
 // ===============================
+<<<<<<< HEAD
 // Create Order (File Upload + Email)
 // ===============================
 exports.createOrder = async (req, res) => {
@@ -363,6 +375,26 @@ exports.createOrder = async (req, res) => {
       message: "Failed to create order",
       error,
     });
+=======
+// Create Order (File Upload)
+// ===============================
+exports.createOrder = async (req, res) => {
+  try {
+    const fileUrl = req.file ? req.file.path : null; // cloudinary URL
+
+    const order = new Order({
+      ...req.body,
+      fileUrl,
+    });
+
+    await order.save();
+
+    res.status(201).json({ success: true, order });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create order", error });
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   }
 };
 
@@ -372,6 +404,7 @@ exports.createOrder = async (req, res) => {
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
+<<<<<<< HEAD
 
     if (!order) {
       return res.status(404).json({
@@ -387,10 +420,23 @@ exports.getOrderById = async (req, res) => {
       message: "Failed to fetch order",
       error,
     });
+=======
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+
+    res.json({ success: true, order });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch order", error });
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   }
 };
 
 // ===============================
+<<<<<<< HEAD
 // Update Order (Cloudinary replace)
 // ===============================
 exports.updateOrder = async (req, res) => {
@@ -407,6 +453,22 @@ exports.updateOrder = async (req, res) => {
           .pop()
           .split(".")[0];
 
+=======
+// Update Order (with Cloudinary Delete + Re-upload)
+// ===============================
+exports.updateOrder = async (req, res) => {
+  try {
+    let fileUrl = req.body.fileUrl; // existing URL
+
+    // If a new file is uploaded → delete old from cloudinary
+    if (req.file) {
+      fileUrl = req.file.path; // new Cloudinary URL
+
+      if (req.body.oldFileUrl) {
+        const publicId = req.body.oldFileUrl.split("/").pop().split(".")[0];
+
+        // delete old file from Cloudinary
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
         await cloudinary.uploader.destroy(`orders/${publicId}`);
       }
     }
@@ -419,21 +481,32 @@ exports.updateOrder = async (req, res) => {
 
     res.json({ success: true, order: updatedOrder });
   } catch (error) {
+<<<<<<< HEAD
     res.status(500).json({
       success: false,
       message: "Failed to update order",
       error,
     });
+=======
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update order", error });
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   }
 };
 
 // ===============================
+<<<<<<< HEAD
 // Delete Order (Cloudinary delete)
+=======
+// Delete Order (Delete From Cloudinary Too)
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 // ===============================
 exports.deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
 
+<<<<<<< HEAD
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -447,12 +520,23 @@ exports.deleteOrder = async (req, res) => {
         .split("/")
         .pop()
         .split(".")[0];
+=======
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+
+    // delete cloudinary file if available
+    if (order.fileUrl) {
+      const publicId = order.fileUrl.split("/").pop().split(".")[0];
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 
       await cloudinary.uploader.destroy(`orders/${publicId}`);
     }
 
     await Order.findByIdAndDelete(req.params.id);
 
+<<<<<<< HEAD
     res.json({
       success: true,
       message: "Order deleted successfully",
@@ -463,5 +547,12 @@ exports.deleteOrder = async (req, res) => {
       message: "Failed to delete order",
       error,
     });
+=======
+    res.json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to delete order", error });
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
   }
 };

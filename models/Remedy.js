@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 const mongoose = require("mongoose");
 
 const remedySchema = new mongoose.Schema(
   {
+<<<<<<< HEAD
     // ================= CLIENT DETAILS =================
     clientName: {
       type: String,
@@ -48,15 +52,34 @@ const remedySchema = new mongoose.Schema(
     },
 
     // ================= STATUS =================
+=======
+    clientName: { type: String, required: true },
+    email: { type: String, required: true },
+    remedyType: {
+      type: String,
+      enum: ["Gemstone", "Yantra", "Mantra","Rahu Yantra", "Homa", "Other"],
+      default: "Gemstone",
+    },
+    description: { type: String },
+    fileUrl: { type: String },
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
     status: {
       type: String,
       enum: ["Pending", "Completed"],
       default: "Pending",
     },
   },
+<<<<<<< HEAD
   {
     timestamps: true,
   }
 );
 
 module.exports = mongoose.model("Remedy", remedySchema);
+=======
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Remedy", remedySchema);
+
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a

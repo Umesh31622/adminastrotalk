@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const mongoose = require("mongoose");
 
 // const manifestationSchema = new mongoose.Schema(
@@ -16,10 +17,13 @@
 // );
 
 // module.exports = mongoose.model("ManifestationService", manifestationSchema);
+=======
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 const mongoose = require("mongoose");
 
 const manifestationSchema = new mongoose.Schema(
   {
+<<<<<<< HEAD
     label: {
       type: String,
       required: true,
@@ -48,6 +52,12 @@ const manifestationSchema = new mongoose.Schema(
       min: 0,
     },
 
+=======
+    label: { type: String, required: true },
+    description: String,
+    fullDesc: String,
+    deliverable: String,
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
     category: {
       type: String,
       enum: ["manifestation", "well-being"],

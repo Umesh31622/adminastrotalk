@@ -28,7 +28,11 @@ const KundliSchema = new mongoose.Schema(
     timeOfBirth: String,
     placeOfBirth: String,
     kundliData: {
+<<<<<<< HEAD
       type: Object, 
+=======
+      type: Object, // store calculated kundli details (planets, zodiac etc.)
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
       default: {},
     },
   },

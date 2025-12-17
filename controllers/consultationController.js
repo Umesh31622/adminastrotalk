@@ -418,6 +418,7 @@
 //     res.status(500).json({ success: false, error: err.message });
 //   }
 // };
+<<<<<<< HEAD
 const Consultation = require("../models/Consultation");
 const { google } = require("googleapis");
 
@@ -558,4 +559,169 @@ exports.updateConsultation = async (req, res) => {
 exports.deleteConsultation = async (req, res) => {
   await Consultation.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+=======
+
+
+const Consultation = require("../models/Consultation");
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+
+// =================== Google Meet Setup ===================
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+
+if (!REFRESH_TOKEN) throw new Error("Google Refresh Token missing in .env");
+
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+
+// =================== Google Meet Event Function ===================
+async function createGoogleMeetEvent({ summary, description, startTime, endTime, attendees = [] }) {
+  try {
+    // Force refresh access token before creating event
+    await oAuth2Client.getAccessToken();
+
+    const event = {
+      summary,
+      description,
+      start: { dateTime: startTime },
+      end: { dateTime: endTime },
+      attendees: attendees.map(email => ({ email })),
+      conferenceData: {
+        createRequest: {
+          requestId: Math.random().toString(36).substring(2, 12),
+          conferenceSolutionKey: { type: "hangoutsMeet" },
+        },
+      },
+    };
+
+    const response = await calendar.events.insert({
+      calendarId: process.env.GOOGLE_CALENDAR_ID || "primary",
+      resource: event,
+      conferenceDataVersion: 1,
+    });
+
+    return response.data.hangoutLink;
+  } catch (err) {
+    console.error("❌ Google Meet API Error:", err.message);
+    return ""; // Return empty string if Meet link creation fails
+  }
+}
+
+// =================== Email Setup ===================
+const createTransporter = () =>
+  nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: Number(process.env.EMAIL_PORT || 587),
+    secure: process.env.EMAIL_SECURE === "true",
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+  });
+
+// =================== GET ALL ===================
+exports.getConsultations = async (req, res) => {
+  try {
+    const consultations = await Consultation.find().sort({ scheduledAt: -1 });
+    res.json({ success: true, consultations });
+  } catch (err) {
+    console.error("❌ Fetch Error:", err.message);
+    res.status(500).json({ success: false, error: "Failed to fetch consultations" });
+  }
+};
+
+// =================== CREATE ===================
+exports.createConsultation = async (req, res) => {
+  try {
+    const { clientName, clientEmail, astrologerName, type, status, scheduledAt, notes } = req.body;
+
+    if (!clientName || !clientEmail || !astrologerName)
+      return res.status(400).json({ success: false, error: "Client Name, Email, and Astrologer Name are required" });
+
+    const eventStart = scheduledAt ? new Date(scheduledAt) : new Date();
+    if (isNaN(eventStart.getTime()))
+      return res.status(400).json({ success: false, error: "Invalid scheduled date/time" });
+
+    const eventEnd = new Date(eventStart.getTime() + 60 * 60 * 1000); // 1 hour
+
+    // ======= Create Google Meet Link =======
+    const googleMeetLink = await createGoogleMeetEvent({
+      summary: `Consultation: ${clientName} with ${astrologerName}`,
+      description: notes || "",
+      startTime: eventStart.toISOString(),
+      endTime: eventEnd.toISOString(),
+      attendees: [clientEmail],
+    });
+
+    // ======= Save Consultation =======
+    const newConsultation = new Consultation({
+      clientName,
+      clientEmail,
+      astrologerName,
+      type: type || "Chat",
+      status: status || "Pending",
+      scheduledAt: eventStart,
+      notes: notes || "",
+      meetingLink: googleMeetLink,
+    });
+
+    const saved = await newConsultation.save();
+
+    // ======= Send Email =======
+    let emailError = null;
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS && clientEmail) {
+        const transporter = createTransporter();
+        await transporter.sendMail({
+          from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+          to: clientEmail,
+          subject: "Your Astrology Consultation Link",
+          html: `
+            <p>Hello ${clientName},</p>
+            <p>Your consultation with <b>${astrologerName}</b> is scheduled at <b>${eventStart.toLocaleString()}</b>.</p>
+            <p>Join via Google Meet: ${
+              googleMeetLink ? `<a href="${googleMeetLink}" target="_blank">${googleMeetLink}</a>` : "Not available"
+            }</p>
+            <p>Notes: ${notes || "None"}</p>
+            <p>Regards,<br/>Astro Team</p>
+          `,
+        });
+      }
+    } catch (err) {
+      console.error("❌ Email Error:", err.message);
+      emailError = err.message;
+    }
+
+    res.status(201).json({ success: true, consultation: saved, googleMeetLink, emailError });
+  } catch (err) {
+    console.error("❌ Error creating consultation:", err.message);
+    res.status(500).json({ success: false, error: "Failed to create consultation" });
+  }
+};
+
+// =================== UPDATE ===================
+exports.updateConsultation = async (req, res) => {
+  try {
+    const updated = await Consultation.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) return res.status(404).json({ success: false, error: "Consultation not found" });
+    res.json({ success: true, consultation: updated });
+  } catch (err) {
+    console.error("❌ Update Error:", err.message);
+    res.status(400).json({ success: false, error: "Failed to update consultation" });
+  }
+};
+
+// =================== DELETE ===================
+exports.deleteConsultation = async (req, res) => {
+  try {
+    const deleted = await Consultation.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ success: false, error: "Consultation not found" });
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (err) {
+    console.error("❌ Delete Error:", err.message);
+    res.status(500).json({ success: false, error: "Failed to delete consultation" });
+  }
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 };

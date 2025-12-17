@@ -32,7 +32,10 @@
 // // router.post("/verify-otp", auth.verifyOtpUserWeb);
 
 // // module.exports = router;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 // const express = require("express");
 // const router = express.Router();
 // const auth = require("../controllers/userwebAuthController");
@@ -63,7 +66,10 @@
 
 // module.exports = router;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a
 const express = require("express");
 const router = express.Router();
 const auth = require("../controllers/userwebAuthController");
@@ -81,3 +87,7 @@ router.get("/me", userwebAuth, (req, res) => {
 });
 
 module.exports = router;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 287860747a9161e2609805405122ff2ca97fad0a

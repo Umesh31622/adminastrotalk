@@ -1,88 +1,174 @@
 
 // const Remedy = require("../models/Remedy");
 
-// // GET all remedies (optional search)
+// /**
+//  * ===============================
+//  * GET ALL REMEDIES
+//  * ===============================
+//  */
 // exports.getRemedies = async (req, res) => {
 //   try {
-//     const { search } = req.query;
-//     let query = {};
-//     if (search) {
-//       query.clientName = { $regex: search, $options: "i" };
-//     }
+//     const search = req.query.search;
+
+//     const query = search
+//       ? { clientName: { $regex: search, $options: "i" } }
+//       : {};
+
 //     const remedies = await Remedy.find(query).sort({ createdAt: -1 });
+
 //     res.json(remedies);
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to fetch remedies", error });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Failed to fetch remedies",
+//       error: err.message,
+//     });
 //   }
 // };
 
-// // CREATE new remedy
+// /**
+//  * ===============================
+//  * CREATE REMEDY
+//  * ===============================
+//  */
 // exports.createRemedy = async (req, res) => {
 //   try {
-//     const { clientName, email, remedyType, description, status } = req.body;
-//     if (!clientName || !email) {
-//       return res.status(400).json({ message: "Client Name and Email are required" });
-//     }
-
-//     const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-//     const remedy = new Remedy({
+//     const {
 //       clientName,
 //       email,
 //       remedyType,
 //       description,
 //       status,
+//       dateOfDoingRemedy,
+//       dateOfProductDelivery,
+//     } = req.body;
+
+//     // ✅ Required validation
+//     if (!clientName || !email || !dateOfDoingRemedy) {
+//       return res.status(400).json({
+//         message: "Client Name, Email and Date of Doing Remedy are required",
+//       });
+//     }
+
+//     const fileUrl = req.file ? req.file.path : null;
+
+//     const remedy = await Remedy.create({
+//       clientName,
+//       email,
+//       remedyType,
+//       description,
+//       status,
+//       dateOfDoingRemedy: new Date(dateOfDoingRemedy), // ✅ main date
+//       dateOfProductDelivery: dateOfProductDelivery
+//         ? new Date(dateOfProductDelivery)
+//         : undefined,
 //       fileUrl,
 //     });
 
-//     await remedy.save();
 //     res.status(201).json(remedy);
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to create remedy", error });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Failed to create remedy",
+//       error: err.message,
+//     });
 //   }
 // };
 
-// // UPDATE remedy
+// /**
+//  * ===============================
+//  * UPDATE REMEDY
+//  * ===============================
+//  */
 // exports.updateRemedy = async (req, res) => {
 //   try {
-//     const remedy = await Remedy.findById(req.params.id);
-//     if (!remedy) return res.status(404).json({ message: "Remedy not found" });
+//     const id = req.params.id;
 
-//     const { clientName, email, remedyType, description, status } = req.body;
+//     const updateData = {
+//       clientName: req.body.clientName,
+//       email: req.body.email,
+//       remedyType: req.body.remedyType,
+//       description: req.body.description,
+//       status: req.body.status,
+//     };
 
-//     remedy.clientName = clientName || remedy.clientName;
-//     remedy.email = email || remedy.email;
-//     remedy.remedyType = remedyType || remedy.remedyType;
-//     remedy.description = description || remedy.description;
-//     remedy.status = status || remedy.status;
-
-//     if (req.file) {
-//       remedy.fileUrl = `/uploads/${req.file.filename}`;
+//     // ✅ Date of Doing Remedy
+//     if (req.body.dateOfDoingRemedy) {
+//       updateData.dateOfDoingRemedy = new Date(
+//         req.body.dateOfDoingRemedy
+//       );
 //     }
 
-//     const updated = await remedy.save();
-//     res.json(updated);
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to update remedy", error });
+//     // ✅ Date of Product Delivery
+//     if (req.body.dateOfProductDelivery) {
+//       updateData.dateOfProductDelivery = new Date(
+//         req.body.dateOfProductDelivery
+//       );
+//     }
+
+//     // ✅ File update
+//     if (req.file) {
+//       updateData.fileUrl = req.file.path;
+//     }
+
+//     const updatedRemedy = await Remedy.findByIdAndUpdate(
+//       id,
+//       updateData,
+//       {
+//         new: true,
+//         runValidators: true,
+//       }
+//     );
+
+//     if (!updatedRemedy) {
+//       return res.status(404).json({
+//         message: "Remedy not found",
+//       });
+//     }
+
+//     res.json(updatedRemedy);
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Failed to update remedy",
+//       error: err.message,
+//     });
 //   }
 // };
 
-// // DELETE remedy
+// /**
+//  * ===============================
+//  * DELETE REMEDY
+//  * ===============================
+//  */
 // exports.deleteRemedy = async (req, res) => {
 //   try {
-//     await Remedy.findByIdAndDelete(req.params.id);
-//     res.json({ message: "Remedy deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to delete remedy", error });
+//     const remedy = await Remedy.findByIdAndDelete(req.params.id);
+
+//     if (!remedy) {
+//       return res.status(404).json({
+//         message: "Remedy not found",
+//       });
+//     }
+
+//     res.json({
+//       message: "Remedy deleted successfully",
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Failed to delete remedy",
+//       error: err.message,
+//     });
 //   }
 // };
-
 const Remedy = require("../models/Remedy");
 
-// GET all remedies
+/**
+ * ===============================
+ * GET ALL REMEDIES (ADMIN)
+ * ===============================
+ */
 exports.getRemedies = async (req, res) => {
   try {
     const search = req.query.search;
+
     const query = search
       ? { clientName: { $regex: search, $options: "i" } }
       : {};
@@ -90,20 +176,34 @@ exports.getRemedies = async (req, res) => {
     const remedies = await Remedy.find(query).sort({ createdAt: -1 });
     res.json(remedies);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch remedies", error: err.message });
+    res.status(500).json({ message: "Failed to fetch remedies" });
   }
 };
 
-// CREATE remedy
+/**
+ * ===============================
+ * CREATE REMEDY
+ * ===============================
+ */
 exports.createRemedy = async (req, res) => {
   try {
-    const { clientName, email, remedyType, description, status } = req.body;
+    const {
+      clientName,
+      email,
+      remedyType,
+      description,
+      status,
+      dateOfDoingRemedy,
+      dateOfProductDelivery,
+    } = req.body;
 
-    if (!clientName || !email) {
-      return res.status(400).json({ message: "Client Name and Email are required" });
+    if (!clientName || !email || !dateOfDoingRemedy) {
+      return res.status(400).json({
+        message: "Client Name, Email and Remedy Date required",
+      });
     }
 
-    const fileUrl = req.file ? req.file.path : null; // CLOUDINARY URL
+    const fileUrl = req.file ? req.file.path : null;
 
     const remedy = await Remedy.create({
       clientName,
@@ -111,55 +211,94 @@ exports.createRemedy = async (req, res) => {
       remedyType,
       description,
       status,
+      dateOfDoingRemedy: new Date(dateOfDoingRemedy),
+      dateOfProductDelivery: dateOfProductDelivery
+        ? new Date(dateOfProductDelivery)
+        : undefined,
       fileUrl,
     });
 
     res.status(201).json(remedy);
   } catch (err) {
-    res.status(500).json({ message: "Failed to create remedy", error: err.message });
+    res.status(500).json({ message: "Failed to create remedy" });
   }
 };
 
-// UPDATE remedy
+/**
+ * ===============================
+ * UPDATE REMEDY
+ * ===============================
+ */
 exports.updateRemedy = async (req, res) => {
   try {
-    const id = req.params.id;
+    const updateData = { ...req.body };
 
-    const updateData = {
-      clientName: req.body.clientName,
-      email: req.body.email,
-      remedyType: req.body.remedyType,
-      description: req.body.description,
-      status: req.body.status,
-    };
+    if (req.body.dateOfDoingRemedy)
+      updateData.dateOfDoingRemedy = new Date(req.body.dateOfDoingRemedy);
 
-    if (req.file) {
-      updateData.fileUrl = req.file.path; // CLOUDINARY URL
-    }
+    if (req.body.dateOfProductDelivery)
+      updateData.dateOfProductDelivery = new Date(
+        req.body.dateOfProductDelivery
+      );
 
-    const updated = await Remedy.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    if (req.file) updateData.fileUrl = req.file.path;
 
-    if (!updated) {
-      return res.status(404).json({ message: "Remedy not found" });
-    }
+    const remedy = await Remedy.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
-    res.json(updated);
+    res.json(remedy);
   } catch (err) {
-    res.status(500).json({ message: "Failed to update remedy", error: err.message });
+    res.status(500).json({ message: "Update failed" });
   }
 };
 
-// DELETE remedy
+/**
+ * ===============================
+ * DELETE REMEDY
+ * ===============================
+ */
 exports.deleteRemedy = async (req, res) => {
-  try {
-    const remedy = await Remedy.findByIdAndDelete(req.params.id);
-    if (!remedy) return res.status(404).json({ message: "Remedy not found" });
+  await Remedy.findByIdAndDelete(req.params.id);
+  res.json({ message: "Deleted" });
+};
 
-    res.json({ message: "Remedy deleted successfully" });
+/**
+ * ===============================
+ * CALENDAR EVENTS (ADMIN + USER)
+ * ===============================
+ */
+exports.getRemedyCalendar = async (req, res) => {
+  try {
+    const email = req.query.email; // user panel ke liye
+
+    const query = email ? { email } : {};
+    const remedies = await Remedy.find(query);
+
+    const events = [];
+
+    remedies.forEach((r) => {
+      // Remedy date
+      events.push({
+        title: `${r.clientName} – ${r.remedyType}`,
+        date: r.dateOfDoingRemedy,
+        color: "#4f46e5",
+      });
+
+      // Delivery date
+      if (r.dateOfProductDelivery) {
+        events.push({
+          title: `${r.clientName} – Delivery`,
+          date: r.dateOfProductDelivery,
+          color: "#16a34a",
+        });
+      }
+    });
+
+    res.json({ events });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete remedy", error: err.message });
+    res.status(500).json({ message: "Calendar error" });
   }
 };

@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Zodiac = require("../models/Zodiac");
-
-// ---------------- POST: Calculate & Save ----------------
 router.post("/calculate", async (req, res) => {
   try {
     const { name, dateOfBirth, timeOfBirth, placeOfBirth } = req.body;
@@ -95,4 +93,5 @@ router.put("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
 

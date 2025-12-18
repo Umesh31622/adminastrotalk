@@ -1,24 +1,3 @@
-// const express = require("express");
-// const router = express.Router();
-// const AdminNotification = require("../models/AdminNotification");
-
-// // Get all admin notifications
-// router.get("/", async (req, res) => {
-//   const notifications = await AdminNotification.find().sort({
-//     createdAt: -1,
-//   });
-//   res.json(notifications);
-// });
-
-// // Mark notification as read
-// router.put("/:id/read", async (req, res) => {
-//   await AdminNotification.findByIdAndUpdate(req.params.id, {
-//     read: true,
-//   });
-//   res.json({ success: true });
-// });
-
-// module.exports = router;
 
 const express = require("express");
 const router = express.Router();

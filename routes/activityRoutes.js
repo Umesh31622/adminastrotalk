@@ -4,4 +4,6 @@ const { getActivity } = require("../controllers/activityController");
 
 router.get("/", auth, getActivity);
 
+
 module.exports = router;
+

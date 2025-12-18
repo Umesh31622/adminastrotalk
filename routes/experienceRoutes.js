@@ -7,7 +7,6 @@ const {
   getExperiences,
   deleteExperience,
 } = require("../controllers/experienceController");
-
 router.post(
   "/upload",
   cloudUpload("experience").single("pdf"),

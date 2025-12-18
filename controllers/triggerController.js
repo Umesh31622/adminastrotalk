@@ -1,39 +1,4 @@
-// const Trigger = require('../models/Trigger');
-// const Template = require('../models/Template');
-// const messageController = require('./messageController');
 
-// exports.createTrigger = async (req, res) => {
-//   const t = await Trigger.create(req.body);
-//   res.json(t);
-// };
-
-// exports.getTriggers = async (req, res) => {
-//   const triggers = await Trigger.find().populate('template').sort({createdAt:-1});
-//   res.json(triggers);
-// };
-
-// // simple function to fire trigger programmatically
-// exports.fireTrigger = async ({ event, payload }) => {
-//   // find triggers for this event
-//   const triggers = await Trigger.find({ event, active: true }).populate('template');
-//   for (const trig of triggers) {
-//     const channel = trig.channel;
-//     const template = trig.template;
-//     // merge payload into template variables
-//     try {
-//       await messageController.sendMessage({
-//         body: {
-//           to: payload.to,
-//           channel,
-//           templateId: template._id,
-//           variables: payload.variables || payload
-//         }
-//       }, { json: ()=>{} }); // we call internal; note: in production structure this should be shared service
-//     } catch (err) {
-//       console.error('Trigger firing error', err);
-//     }
-//   }
-// };
 
 const Trigger = require("../models/Trigger");
 const Template = require("../models/Template");

@@ -19,7 +19,7 @@ const io = socketio(server, {
     origin: [
       "http://localhost:3000",
       "https://frontendastro-1.onrender.com",
-       "https://websitemernastro.vercel.app/",
+       "https://websitemernastro.vercel.app",
     ],
     credentials: true,
   },
@@ -45,7 +45,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3002",
   "https://frontendastro-1.onrender.com",
-   "https://websitemernastro.vercel.app/",
+   "https://websitemernastro.vercel.app",
 ];
 
 app.use(
@@ -217,5 +217,6 @@ app.get("/oauth2callback", async (req, res) => {
     <textarea style="width:100%;height:100px;">${code}</textarea>
   `);
 });
+
 
 

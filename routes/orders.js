@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const cloudUpload = require("../middleware/cloudUpload");
 const upload = cloudUpload("orders"); // 👈 FIXED: multer instance
 
@@ -20,5 +19,6 @@ router.put("/:id", upload.single("file"), updateOrder);
 router.delete("/:id", deleteOrder);
 
 module.exports = router;
+
 
 

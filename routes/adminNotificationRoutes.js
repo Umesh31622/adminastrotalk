@@ -2,10 +2,6 @@ const express = require("express");
 const router = express.Router();
 const AdminNotification = require("../models/AdminNotification");
 
-/* ======================================================
-   CREATE NOTIFICATION
-   POST /api/admin-notifications
-====================================================== */
 router.post("/", async (req, res) => {
   try {
     const { type, message, userName, userPhone } = req.body;

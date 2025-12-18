@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const cloudUpload = require("../middleware/cloudUpload"); // ✅ Cloudinary storage
@@ -12,3 +13,4 @@ router.post("/", upload.single("file"), updateAbout); // ⭐ CLOUD UPLOAD
 router.delete("/", deleteAbout);
 
 module.exports = router;
+

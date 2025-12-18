@@ -677,9 +677,6 @@ const { google } = require("googleapis");
 const app = express();
 const server = http.createServer(app);
 
-/* ======================================================
-   SOCKET.IO SETUP
-====================================================== */
 const io = socketio(server, {
   cors: {
     origin: [
@@ -705,9 +702,7 @@ io.on("connection", (socket) => {
   });
 });
 
-/* ======================================================
-   CORS
-====================================================== */
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -738,9 +733,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-/* ======================================================
-   DATABASE
-====================================================== */
+
 const PORT = process.env.PORT || 7000;
 
 mongoose.set("strictQuery", false);
@@ -754,9 +747,7 @@ mongoose
     console.error("❌ MongoDB connection failed:", err.message)
   );
 
-/* ======================================================
-   RAZORPAY
-====================================================== */
+
 try {
   const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -768,9 +759,7 @@ try {
   console.error("❌ Razorpay init failed:", err.message);
 }
 
-/* ======================================================
-   ROUTES
-====================================================== */
+
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/clients", require("./routes/clients"));
@@ -827,15 +816,13 @@ app.use("/api/chat", require("./routes/chatRoutes"));
 app.use("/api/wealth", require("./routes/wealthRoutes"));
 
 
-/* 🔔 ADMIN NOTIFICATIONS (Birthday / Anniversary) */
+
 app.use(
   "/api/admin-notifications",
   require("./routes/adminNotificationRoutes")
 );
 
-/* ======================================================
-   HEALTH & ROOT
-====================================================== */
+
 app.get("/api/health", (req, res) =>
   res.json({ status: "OK", time: new Date().toISOString() })
 );
@@ -844,9 +831,7 @@ app.get("/", (req, res) =>
   res.send("🚀 MERN Astrology Backend Running")
 );
 
-/* ======================================================
-   404 & ERROR HANDLER
-====================================================== */
+
 app.use("/api/*", (req, res) =>
   res.status(404).json({ success: false, error: "API route not found" })
 );
@@ -859,18 +844,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-/* ======================================================
-   CRON JOBS
-====================================================== */
 
-// Existing automation
 schedule.scheduleJob("0 9 * * *", async () => {
   const { sendScheduledReminders } = require("./services/automationService");
   await sendScheduledReminders();
   console.log("📅 General reminders sent at 9 AM");
 });
 
-// 🎂 💍 Birthday & Anniversary Automation
 schedule.scheduleJob("0 9 * * *", async () => {
   const {
     runBirthdayAnniversaryAutomation,
@@ -882,18 +862,14 @@ schedule.scheduleJob("0 9 * * *", async () => {
   console.log("🎯 Birthday / Anniversary automation executed");
 });
 
-/* ======================================================
-   START SERVER
-====================================================== */
+
 server.listen(PORT, () =>
   console.log(
     `🌐 Server running on port ${PORT} (${process.env.NODE_ENV || "development"})`
   )
 );
 
-/* ======================================================
-   GOOGLE OAUTH CALLBACK
-====================================================== */
+
 app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
   if (!code) return res.send("No authorization code received.");
@@ -904,3 +880,4 @@ app.get("/oauth2callback", async (req, res) => {
     <textarea style="width:100%;height:100px;">${code}</textarea>
   `);
 });
+

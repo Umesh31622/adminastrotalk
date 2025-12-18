@@ -1,4 +1,3 @@
-
 const { google } = require("googleapis");
 require("dotenv").config();
 
@@ -58,4 +57,5 @@ async function createGoogleMeetEvent({
 }
 
 module.exports = { createGoogleMeetEvent };
+
 

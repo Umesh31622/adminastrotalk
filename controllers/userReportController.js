@@ -1,34 +1,8 @@
-// const UserReport = require("../models/UserReport");
 
-// exports.addUserReport = async (req, res) => {
-//   try {
-//     const report = await UserReport.create(req.body);
-//     res.json({ success: true, data: report });
-//   } catch (err) {
-//     res.status(500).json({ success: false, message: err.message });
-//   }
-// };
 
-// exports.getUserReports = async (req, res) => {
-//   try {
-//     const reports = await UserReport.find({ userId: req.params.userId })
-//       .sort({ createdAt: -1 });
 
-//     res.json({ success: true, data: reports });
-//   } catch (err) {
-//     res.status(500).json({ success: false, message: err.message });
-//   }
-// };
 
-// exports.deleteUserReport = async (req, res) => {
-//   try {
-//     await UserReport.findByIdAndDelete(req.params.id);
-//     res.json({ success: true, message: "Report deleted" });
-//   } catch (err) {
-//     res.status(500).json({ success: false, message: err.message });
-//   }
-// };
-// models/UserReport.js load
+
 const UserReport = require("../models/UserReport");
 
 // ➕ Add User Report

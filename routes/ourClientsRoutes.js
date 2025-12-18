@@ -1,28 +1,3 @@
-// const express = require("express");
-// const router = express.Router();
-// const upload = require("../middleware/upload");
-
-// const {
-//   createClient,
-//   getClients,
-//   updateClient,
-//   deleteClient,
-// } = require("../controllers/ourClientsController");
-
-// // CREATE
-// router.post("/", upload.single("image"), createClient);
-
-// // READ ALL
-// router.get("/", getClients);
-
-// // UPDATE
-// router.put("/:id", upload.single("image"), updateClient);
-
-// // DELETE
-// router.delete("/:id", deleteClient);
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 

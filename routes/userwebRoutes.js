@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 const ctrl = require("../controllers/userwebController");
@@ -27,4 +26,5 @@ router.get("/wallet/:id", ctrl.getWallet);
 router.get("/history/:id", ctrl.getFullHistory);
 
 module.exports = router;
+
 

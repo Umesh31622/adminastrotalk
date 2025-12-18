@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 const Zodiac = require("../models/Zodiac");
@@ -96,3 +95,4 @@ router.put("/:id", async (req, res) => {
 });
 
 module.exports = router;
+

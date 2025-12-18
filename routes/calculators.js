@@ -1,60 +1,4 @@
 
-
-// const express = require("express");
-// const router = express.Router();
-
-// // Kundli Calculator
-// router.post("/kundli", (req, res) => {
-//   const { name, dob, pob } = req.body;
-//   res.json({ name, dob, pob, sunSign: "Leo", moonSign: "Cancer" });
-// });
-
-// // Numerology Calculator
-// router.post("/numerology", (req, res) => {
-//   const { name } = req.body;
-//   res.json({ name, lifeNumber: 7 });
-// });
-
-// // Compatibility Calculator
-// router.post("/compatibility", (req, res) => {
-//   const { name1, name2 } = req.body;
-//   res.json({ name1, name2, score: "85%" });
-// });
-
-// // Transit Calculator
-// router.post("/transit", (req, res) => {
-//   const { dob } = req.body;
-//   res.json({ dob, message: "Transit calculation result" });
-// });
-
-// // Dasha Calculator
-// router.post("/dasha", (req, res) => {
-//   const { dob } = req.body;
-//   res.json({ dob, message: "Dasha calculation result" });
-// });
-
-// // Shadbala Calculator
-// router.post("/shadbala", (req, res) => {
-//   res.json({ message: "Shadbala calculation result" });
-// });
-
-// // Manglik Calculator
-// router.post("/manglik", (req, res) => {
-//   res.json({ message: "Manglik calculation result" });
-// });
-
-// // Muhurat Calculator
-// router.post("/muhurat", (req, res) => {
-//   res.json({ message: "Muhurat calculation result" });
-// });
-
-// // Remedial Calculator
-// router.post("/remedial", (req, res) => {
-//   res.json({ message: "Remedial calculation result" });
-// });
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
@@ -250,3 +194,4 @@ router.post("/daily-prediction", async (req, res) => {
 });
 
 module.exports = router;
+

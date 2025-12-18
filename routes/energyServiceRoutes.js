@@ -1,15 +1,4 @@
-// const router = require("express").Router();
-// const {
-//   addService,
-//   getAllServices,
-//   deleteService,
-// } = require("../controllers/energyServiceController");
 
-// router.post("/add", addService);
-// router.get("/all", getAllServices);
-// router.delete("/delete/:id", deleteService);
-
-// module.exports = router;
 const router = require("express").Router();
 const {
   addService,

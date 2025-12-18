@@ -1,18 +1,3 @@
-// const mongoose = require("mongoose");
-
-// const formSchema = new mongoose.Schema({
-//   title: { type: String, required: true },
-//   fields: [
-//     {
-//       label: String,
-//       type: String,
-//       options: [String],
-//       required: Boolean,
-//     },
-//   ],
-// }, { timestamps: true });
-
-// module.exports = mongoose.model("Form", formSchema);
 
 const mongoose = require("mongoose");
 

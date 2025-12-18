@@ -1,29 +1,3 @@
-// const MessageLog = require("../models/MessageLog");
-
-// // Send a message
-// exports.sendMessage = async (req, res) => {
-//   try {
-//     const { sender, receiver, message } = req.body;
-//     const newMessage = new MessageLog({ sender, receiver, message });
-//     await newMessage.save();
-//     res.status(201).json({ success: true, data: newMessage });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, error: err.message });
-//   }
-// };
-
-// // Get all messages
-// exports.getMessages = async (req, res) => {
-//   try {
-//     const messages = await MessageLog.find();
-//     res.status(200).json({ success: true, data: messages });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, error: err.message });
-//   }
-// };
-
 
 const Template = require("../models/Template");
 const MessageLog = require("../models/MessageLog");

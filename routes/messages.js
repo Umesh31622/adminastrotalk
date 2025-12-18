@@ -6,3 +6,4 @@ router.post('/', triggerCtrl.createTrigger);
 router.get('/', triggerCtrl.getTriggers);
 
 module.exports = router;
+

@@ -34,7 +34,6 @@ router.post("/calculate", async (req, res) => {
   }
 });
 
-// ---------------- GET: Fetch All ----------------
 router.get("/", async (req, res) => {
   try {
     const data = await Zodiac.find().sort({ createdAt: -1 });
@@ -44,7 +43,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ---------------- DELETE: Remove Entry ----------------
+
 router.delete("/:id", async (req, res) => {
   try {
     await Zodiac.findByIdAndDelete(req.params.id);
@@ -93,5 +92,6 @@ router.put("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
 
 

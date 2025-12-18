@@ -117,7 +117,3 @@ const userwebSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("UserWeb", userwebSchema);
-<<<<<<< HEAD
-=======
-
->>>>>>> 287860747a9161e2609805405122ff2ca97fad0a

@@ -1,21 +1,3 @@
-// const mongoose = require('mongoose');
-
-// const calculatorSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   type: { type: String, required: true }, // e.g., numerology, zodiac, horoscope
-//   description: { type: String },
-//   inputs: [
-//     {
-//       name: { type: String },
-//       type: { type: String, default: "text" } // text, number, date
-//     }
-//   ],
-//   formula: { type: String }, // JS formula as string
-//   createdAt: { type: Date, default: Date.now }
-// });
-
-// module.exports = mongoose.model('Calculator', calculatorSchema);
-
 
 const mongoose = require("mongoose");
 

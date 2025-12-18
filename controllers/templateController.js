@@ -1,33 +1,3 @@
-// const Template = require('../models/Template');
-
-// exports.createTemplate = async (req, res) => {
-//   const { name, type, subject, body, variables } = req.body;
-//   try {
-//     const t = await Template.create({
-//       name, type, subject, body, variables, createdBy: req.user?._id
-//     });
-//     res.json(t);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
-// exports.getTemplates = async (req, res) => {
-//   const templates = await Template.find().sort({createdAt:-1});
-//   res.json(templates);
-// };
-
-// exports.updateTemplate = async (req, res) => {
-//   const { id } = req.params;
-//   const upd = await Template.findByIdAndUpdate(id, req.body, { new: true });
-//   res.json(upd);
-// };
-
-// exports.deleteTemplate = async (req, res) => {
-//   const { id } = req.params;
-//   await Template.findByIdAndDelete(id);
-//   res.json({ success: true });
-// };
 
 
 const Template = require("../models/Template");
